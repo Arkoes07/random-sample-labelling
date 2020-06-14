@@ -18,7 +18,7 @@ const std::string outPath = "D:\\datasets\\ngantuk\\random_sample";
 
 int main()
 {
-	std::string folder = "01";
+	std::string folder = "09";
 
 	int SAMPLE_PER_CLASS = 50;
 	int sampleCounter = 0;
@@ -26,6 +26,10 @@ int main()
 
 	for (const auto& entry : fs::directory_iterator(dataPath + "\\" + folder)) {
 
+		// create a file for output
+		std::ofstream file;
+		file.open(outPath + "\\" + folder + ".csv", std::ios_base::app);
+		
 		// get file name (class)
 		std::string classNumber = entry.path().stem().string();
 		std::cout << "====== class " << classNumber << " ======" << std::endl;
@@ -55,6 +59,8 @@ int main()
 			if (currentFrame.empty()) 
 				break;
 
+			//cv::pyrDown(currentFrame, currentFrame, cv::Size(currentFrame.cols / 2, currentFrame.rows / 2));
+
 			// Display current frame
 			cv::imshow("Frame", currentFrame);
 
@@ -63,18 +69,22 @@ int main()
 			case 49: //1
 				sampleCounter++;
 				std::cout << "sample " << sampleCounter << "=> frame: " << frameCounter << " both open" << std::endl;
+				file << folder << ';' << classNumber << ';' << frameCounter << ';' << 1 << ';' << 1 << std::endl;
 				break; 
 			case 50: //2
 				sampleCounter++;
 				std::cout << "sample " << sampleCounter << "=> frame: " << frameCounter << " eye close mouth open" << std::endl;
+				file << folder << ';' << classNumber << ';' << frameCounter << ';' << 0 << ';' << 1 << std::endl;
 				break;
 			case 51: //3
 				sampleCounter++;
 				std::cout << "sample " << sampleCounter << "=> frame: " << frameCounter << " eye open mouth close" << std::endl;
+				file << folder << ';' << classNumber << ';' << frameCounter << ';' << 1 << ';' << 0 << std::endl;
 				break;
 			case 52: //4
 				sampleCounter++;
 				std::cout << "sample " << sampleCounter << "=> frame: " << frameCounter << " both close" << std::endl;
+				file << folder << ';' << classNumber << ';' << frameCounter << ';' << 0 << ';' << 0 << std::endl;
 				break;
 			default:
 				break;
@@ -89,6 +99,8 @@ int main()
 			// increase frame counter
 			frameCounter++;
 		}
+
+		file.close();
 
 		// When everything done, release the video capture object
 		cap.release();

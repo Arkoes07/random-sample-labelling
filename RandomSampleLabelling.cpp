@@ -20,7 +20,9 @@ int main()
 {
 	std::string folder = "01";
 
+	int SAMPLE_PER_CLASS = 50;
 	int sampleCounter = 0;
+	int videoCounter = 0;
 
 	for (const auto& entry : fs::directory_iterator(dataPath + "\\" + folder)) {
 
@@ -58,26 +60,30 @@ int main()
 
 			char c = (char)cv::waitKey(0);
 			switch (c) {
-			case 49:
+			case 49: //1
 				sampleCounter++;
 				std::cout << "sample " << sampleCounter << "=> frame: " << frameCounter << " both open" << std::endl;
-				break;
-			case 50:
+				break; 
+			case 50: //2
 				sampleCounter++;
 				std::cout << "sample " << sampleCounter << "=> frame: " << frameCounter << " eye close mouth open" << std::endl;
 				break;
-			case 51:
+			case 51: //3
 				sampleCounter++;
 				std::cout << "sample " << sampleCounter << "=> frame: " << frameCounter << " eye open mouth close" << std::endl;
 				break;
-			case 52:
+			case 52: //4
 				sampleCounter++;
 				std::cout << "sample " << sampleCounter << "=> frame: " << frameCounter << " both close" << std::endl;
 				break;
 			default:
 				break;
 			};
-			if (c == 27) 
+			if (c == 27) //Esc
+				break;
+
+			// limit sample per class
+			if (sampleCounter == SAMPLE_PER_CLASS + (SAMPLE_PER_CLASS * videoCounter))
 				break;
 
 			// increase frame counter
@@ -86,6 +92,8 @@ int main()
 
 		// When everything done, release the video capture object
 		cap.release();
+
+		videoCounter++;
 	}
 
 	// closes all the frames
